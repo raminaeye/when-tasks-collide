@@ -28,13 +28,14 @@ export default function Playground() {
         </li>
         <li>
           Load <strong>"Loud vs quiet."</strong> Now the plain sum gets dragged by the big gradient and
-          the pink zone eats it: task 1's score goes negative. PCGrad, MGDA, and CAGrad all fix it —
+          the green zone eats it: task 2's score goes negative. PCGrad, MGDA, and CAGrad all fix it —
           differently.
         </li>
         <li>
           Switch to <strong>CAGrad</strong> and slide c from 0 to 1.5. At 0 the update collapses onto
-          the average (plain GD); as it grows, the dashed leash circle widens and the update tilts
-          toward the worst-off task.
+          the plain average of the two gradients — same direction as "Plain sum", half the length, so
+          the helped/HURT verdicts don't change; as c grows, the dashed leash circle widens and the
+          update tilts toward the worst-off task.
         </li>
         <li>
           Load <strong>"Allies"</strong>: with cos ≥ 0, PCGrad and GD coincide — when nobody fights,

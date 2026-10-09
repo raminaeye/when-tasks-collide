@@ -21,7 +21,7 @@ export default function ThermostatLoop() {
 
   return (
     <div className="box" style={{ background: "var(--bg-tinted)", border: "1px solid rgba(203,198,185,.12)" }}>
-      <div className="box-label" style={{ color: "var(--gold)" }}>Figure 4 · the thermostat loop, live</div>
+      <div className="box-label" style={{ color: "var(--gold)" }}>Algorithm 1 · the thermostat loop, live</div>
       <svg viewBox="0 0 460 290" style={{ width: "100%", display: "block" }}>
         {/* arrows between stations */}
         {[

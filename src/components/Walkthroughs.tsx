@@ -199,7 +199,7 @@ export function C4Walkthrough() {
         },
         {
           t: "The collapse: millions of dimensions down to K",
-          math: <M>w* = argmin (w ∈ Δ) F(w), &nbsp; F(w) = g_wᵀg₀ + φ‖g_w‖, &nbsp; φ = c²‖g₀‖²</M>,
+          math: <M>w* = argmin (w ∈ Δ) F(w), &nbsp; F(w) = g_wᵀg₀ + √φ‖g_w‖, &nbsp; φ = c²‖g₀‖²</M>,
           d: "…into a search over K blend weights, one per task. K is usually 2 to 50, so this small problem is solved almost for free at each step (the paper's code does it with an off-the-shelf solver; our playground uses a fine grid).",
         },
         {
@@ -209,7 +209,7 @@ export function C4Walkthrough() {
         },
         {
           t: "Why you should care",
-          math: <M>same answer as the primal · K-dimensional search · ~5% extra cost per step</M>,
+          math: <M>same answer as the primal · K-dimensional search · tiny solve cost per step</M>,
           d: "Duality doesn't approximate the diplomat-on-a-leash rule — it is the same answer, computed in a vastly smaller room. That is what makes a proof-backed method practical inside a training loop.",
         },
       ]}

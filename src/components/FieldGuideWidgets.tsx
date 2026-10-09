@@ -138,7 +138,7 @@ export function LossStackLandscape() {
     return out;
   }, [k, seed]);
 
-  // min-norm point in convex hull (Frank-Wolfe, 60 iters)
+  // min-norm point in convex hull (Frank-Wolfe, 80 iters)
   const blend = useMemo(() => {
     let w = dirs.map(() => 1 / dirs.length);
     const combo = (ww: number[]) => ({

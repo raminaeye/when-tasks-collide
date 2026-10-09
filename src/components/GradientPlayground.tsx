@@ -51,7 +51,8 @@ function cagradD(g1: V, g2: V, c: number): V {
   const gw = add(scale(g1, bestW), scale(g2, 1 - bestW));
   const ngw = norm(gw);
   if (ngw < 1e-9) return g0;
-  return add(g0, scale(gw, (c * n0) / ngw));
+  // official 1/(1+c) normalization, matching the paper's reference code (as in the racer)
+  return scale(add(g0, scale(gw, (c * n0) / ngw)), 1 / (1 + c));
 }
 
 export default function GradientPlayground() {

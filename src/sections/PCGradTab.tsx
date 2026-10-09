@@ -116,9 +116,9 @@ def pcgrad_combine(grads):
       </ol>
       <p>
         The theory ties it together: PCGrad is proven to lower the multitask loss more than plain
-        gradient descent exactly when the fight is strong compared to the loudness gap (cosϕ ≤
-        −Φ/12), the landscape is curved enough, and the step size is big enough — in other words,
-        exactly when the triad shows up. On simple convex two-task problems, PCGrad is proven to reach
+        gradient descent when the fight is strong compared to the loudness gap (cosϕ ≤
+        −Φ), the landscape is curved enough, and the step size is big enough — in other words,
+        when the triad shows up. On simple convex two-task problems, PCGrad is proven to reach
         the best point or a point of perfect standoff. And the gains are real: over 30% absolute
         improvement on multi-task robot-learning benchmarks.
       </p>

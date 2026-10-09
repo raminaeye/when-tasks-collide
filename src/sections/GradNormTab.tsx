@@ -137,7 +137,7 @@ w = w * K / sum(w)                     # fixed budget: one task up, another down
         </p>
         <p className="small" style={{ marginBottom: 0 }}>
           Task 1 is too quiet (4 ≪ 143) so its weight rises; task 2 is too loud (400 ≫ 247) so its
-          weight falls; then both are rescaled to sum to 2 (w = [1.252, 0.748] in the paper's code). The
+          weight falls; then both are rescaled to sum to 2 (w = [1.252, 0.748] after the rescale). The
           scale term pulls both toward 202 while the rate term boosts whoever is behind — task 2 gets a
           1.22× boost, task 1 a 0.71× discount.
         </p>
@@ -148,9 +148,11 @@ w = w * K / sum(w)                     # fixed budget: one task up, another down
       <h3>Watch the thermostat work</h3>
       <GradNormSim />
 
-      <h3>What the paper's toy showed (300× scale gap)</h3>
+      <h3>What the schematic toy shows (300× scale gap)</h3>
       <p>
-        One shared trunk, two prediction tasks, task 2's targets 300× bigger than task 1's. With fixed
+        One shared trunk, two prediction tasks, task 2's targets 300× bigger than task 1's — an
+        exaggerated version of the paper's Figure 2 toy, which uses a 100× output scale and reports
+        curves rather than single numbers. With fixed
         equal weights, the quiet task stalls about 300× worse than training alone (0.033 vs 0.0001) —
         and the loud task is hurt too (647 vs 346 alone): the interference is not zero-sum. GradNorm
         improves both (0.026 and 497), turning the loud task's weight down to 0.018 and the quiet one's
@@ -189,7 +191,7 @@ w = w * K / sum(w)                     # fixed budget: one task up, another down
             <tr>
               <td className="mono">λ_w</td>
               <td>How fast the knobs move — the learning rate of the weights themselves (the network's own rate is separate).</td>
-              <td>10–100× smaller than the network's rate (the toy uses 2.5×10⁻⁴ next to SGD at 0.01). When in doubt, go small.</td>
+              <td>10–100× smaller than the network's rate (the paper uses 0.025 with Adam for the weight updates on NYUv2). When in doubt, go small.</td>
               <td>Too big: weights overcorrect, loudness chases its own tail. Too small: balance arrives after the early, most damaged part of training.</td>
             </tr>
             <tr>

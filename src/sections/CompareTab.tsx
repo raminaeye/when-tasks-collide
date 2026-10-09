@@ -85,12 +85,13 @@ export default function CompareTab() {
 
       <h3>Where they land on the toy (loss space)</h3>
       <p>
-        On the toy landscape of the CAGrad tab, plotting only where each 100,000-step run ends: GD —
-        three runs stall far above the Pareto set, oscillating forever, two reach it. MGDA and PCGrad —
-        four of five reach the Pareto set but land <strong>scattered along it</strong>: every landing
-        spot is a valid trade-off, yet the initialization does the choosing. CAGrad — four of five runs
-        land exactly on the ★, stacked on top of each other. And as c varies: c = 0 inherits GD's
-        stalled runs, c = 10 inherits MGDA's spread, every mid-range c stacks on the star.
+        On the toy landscape of the CAGrad tab, plotting only where each 20,000-step run ends: GD —
+        three runs stall far above the Pareto set, oscillating; two reach it. MGDA — all five reach
+        the low-loss region but land <strong>scattered along it</strong>: every landing spot is a
+        valid trade-off, yet the initialization does the choosing. PCGrad — four of five reach it.
+        CAGrad — two of five runs land exactly on the ★ (the rest are still descending when the steps
+        run out; longer runs bring all five home). And as c varies: c = 0 inherits GD's stalled runs,
+        c = 10 inherits MGDA's spread.
       </p>
 
       <h3>The two families are teammates, not rivals</h3>

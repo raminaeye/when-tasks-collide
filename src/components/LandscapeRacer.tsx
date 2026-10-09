@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
-// The exact two-task toy landscape from the CAGrad paper, as given in Appendix A.
+// The exact two-task toy landscape from the CAGrad paper, as given in §5.1.
 type V = [number, number];
 const EPS = 1e-4;
 
@@ -151,8 +151,8 @@ function LossCurves({ runs }: { runs: Record<MethodKey, Run> }) {
 function LossSpace({ runs, cagradC, c, setC }: { runs: Record<MethodKey, Run>; cagradC: Run; c: number; setC: (v: number) => void }) {
   const W = 560, H = 280, P = 40;
   const front: [number, number][] = [];
-  for (let y = -7; y <= 7; y += 0.05) {
-    const [l1, l2] = losses([-8.3552, y]);
+  for (let x = -7; x <= 7; x += 0.05) {
+    const [l1, l2] = losses([x, -8.3552]);
     front.push([l1, l2]);
   }
   const pts = METHODS.map((m) => { const end = runs[m.key].path[runs[m.key].path.length - 1]; return { m, p: losses(end) }; });
@@ -245,12 +245,12 @@ function FigMap({ bg, runs, label }: { bg: HTMLCanvasElement; runs: { run: Run; 
     const ctx = cv.getContext("2d")!;
     ctx.drawImage(bg, 0, 0, size, size);
     const px = (t: V): [number, number] => [((t[0] + 10) / 20) * size, ((10 - t[1]) / 20) * size];
-    // Pareto bar + star
-    const [a, b] = px([-8.3552, -7]);
-    const [c2, d2] = px([-8.3552, 7]);
+    // Pareto bar + star (horizontal: theta2 = -8.3552, theta1 in [-7,7])
+    const [a, b] = px([-7, -8.3552]);
+    const [c2, d2] = px([7, -8.3552]);
     ctx.strokeStyle = "rgba(233,231,226,.45)"; ctx.lineWidth = 4; ctx.lineCap = "round";
     ctx.beginPath(); ctx.moveTo(a, b); ctx.lineTo(c2, d2); ctx.stroke();
-    const [sx2, sy2] = px([-8.3552, 0]);
+    const [sx2, sy2] = px([0, -8.3552]);
     ctx.fillStyle = "#e9e7e2"; ctx.font = "13px sans-serif"; ctx.fillText("★", sx2 - 6, sy2 + 4);
     // trails: yellow → orange with time, red endpoint dot (paper's style)
     for (const { run, start } of runs) {
@@ -338,8 +338,8 @@ function ConflictChunks({ run }: { run: Run }) {
         <text x={P} y={H - 6} fontSize={9} fill="rgba(203,198,185,.5)">training progress → (10 chunks of the full run)</text>
       </svg>
       <div className="small dim">
-        Same idea as the paper's Figure 9a (which reports ≈85% after chunk two at 100k steps): GD's run is chopped
-        into ten chunks, each bar counts how often g₁·g₂ &lt; 0 inside it. The conflict is the climate of the trap,
+        GD's run is chopped
+        into ten chunks; each bar counts how often g₁·g₂ &lt; 0 inside it. The conflict is the climate of the trap,
         not a passing storm.
       </div>
     </div>
@@ -415,19 +415,19 @@ export default function LandscapeRacer() {
     ctx.drawImage(bg, 0, 0, size, size);
     const px = (t: V): [number, number] => [((t[0] + 10) / 20) * size, ((10 - t[1]) / 20) * size];
 
-    // Pareto set bar: theta1 = -8.3552, theta2 in [-7,7]
-    const [px1, py1] = px([-8.3552, -7]);
-    const [px2, py2] = px([-8.3552, 7]);
+    // Pareto set bar: theta2 = -8.3552, theta1 in [-7,7]
+    const [px1, py1] = px([-7, -8.3552]);
+    const [px2, py2] = px([7, -8.3552]);
     ctx.strokeStyle = "rgba(233,231,226,.55)";
     ctx.lineWidth = 5;
     ctx.lineCap = "round";
     ctx.beginPath(); ctx.moveTo(px1, py1); ctx.lineTo(px2, py2); ctx.stroke();
     // star: min average loss on the bar
-    let best: V = [-8.3552, 0], bestL = Infinity;
-    for (let y = -7; y <= 7; y += 0.02) {
-      const [l1, l2] = losses([-8.3552, y]);
+    let best: V = [0, -8.3552], bestL = Infinity;
+    for (let x = -7; x <= 7; x += 0.02) {
+      const [l1, l2] = losses([x, -8.3552]);
       const L = (l1 + l2) / 2;
-      if (L < bestL) { bestL = L; best = [-8.3552, y]; }
+      if (L < bestL) { bestL = L; best = [x, -8.3552]; }
     }
     const [sx, sy] = px(best);
     ctx.fillStyle = "#e9e7e2";
@@ -518,7 +518,7 @@ export default function LandscapeRacer() {
         <LossSpace runs={runs} cagradC={cagradC} c={c} setC={setC} />
       </div>
       <p className="small dim" style={{ marginTop: 10 }}>
-        The real landscape of Appendix A: two ravines carved through the upper half, two bowls below, the gray bar is the Pareto set, ★ is its best point. <strong style={{ color: "var(--lighter)" }}>Try this:</strong> press Replay race, then switch starting points. You should see GD (red) pace inside the ravine while CAGrad (blue) walks to the ★. <strong style={{ color: "var(--lighter)" }}>Takeaway:</strong> in this replay GD's two gradients fight on {(runs.gd.confFrac * 100).toFixed(0)}% of all steps; in the paper's longer runs the figure is 85% once GD reaches the ravine, for the rest of training. Conflict is not a passing storm, it is the climate of the trap — and no learning-rate schedule escapes it. (The paper runs 100,000 Adam steps at 10⁻³, minimum average loss −15.09; this replay uses 20,000 steps at 2×10⁻³ so it finishes while you watch.)
+        The real landscape of the paper's §5.1: two ravines carved through the upper half, two bowls below, the gray bar is the Pareto set, ★ is its best point. <strong style={{ color: "var(--lighter)" }}>Try this:</strong> press Replay race, then switch starting points. You should see GD (red) pace inside the ravine while CAGrad (blue) walks to the ★. <strong style={{ color: "var(--lighter)" }}>Takeaway:</strong> in this replay GD's two gradients fight on {(runs.gd.confFrac * 100).toFixed(0)}% of all steps, and the fighting never lets up once it is trapped. Conflict is not a passing storm, it is the climate of the trap — and no learning-rate schedule escapes it. (The paper runs 100,000 Adam steps at 10⁻³, minimum average loss −15.09; this replay uses 20,000 steps at 2×10⁻³ so it finishes while you watch.)
       </p>
     </div>
   );

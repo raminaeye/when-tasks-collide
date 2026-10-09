@@ -24,20 +24,22 @@ export default function UncertaintyTab() {
         The key move: if a task is that noisy, pushing hard on its loss is partly pushing on noise — the
         model chases fluctuations it cannot remove. The sensible thing is to turn the volume down on
         exactly those tasks, by an amount tied to how noisy they are. Each task gets a weight of
-        1/σᵢ² — a task twice as noisy counts four times less — and the σᵢ are <strong>learned as
+        1/(2σᵢ²) for regression — 1/σᵢ² for classification, where the likelihood gives no 1/2 — so a
+        task twice as noisy counts four times less either way, and the σᵢ are <strong>learned as
         parameters during training</strong>, not set by hand.
       </p>
 
       <h3>The objective, in plain words</h3>
-      <Eq caption="For ordinary regression or classification losses.">
-        L_total = <span className="op">Σ</span>ᵢ ( Lᵢ / (2σᵢ²) + log σᵢ )
+      <Eq caption="Two likelihoods, two objectives. Regression uses the Gaussian form; classification uses the scaled-softmax form, which has no 1/2.">
+        regression: L_total = <span className="op">Σ</span>ᵢ ( Lᵢ / (2σᵢ²) + log σᵢ )<br />
+        classification: L_total = <span className="op">Σ</span>ᵢ ( Lᵢ / σᵢ² + log σᵢ )
       </Eq>
       <ol className="steps">
         <li><strong>Lᵢ</strong> is task i's usual loss, the same number you already compute.</li>
         <li><strong>σᵢ</strong> is the learned noise level of task i — one number per task, bigger means noisier.</li>
         <li>
-          <strong>1/(2σᵢ²)</strong> is the volume knob. As σᵢ grows, the task is turned down,
-          quadratically. A noisy task automatically fades into the background.
+          <strong>1/(2σᵢ²)</strong> is the volume knob — 1/σᵢ² for classification. As σᵢ grows, the task
+          is turned down, quadratically. A noisy task automatically fades into the background.
         </li>
         <li>
           <strong>log σᵢ</strong> is the penalty that keeps the model honest. Without it, the model
@@ -59,13 +61,14 @@ export default function UncertaintyTab() {
       <h3>Algorithm 5 · per training step</h3>
       <ol className="steps">
         <li>Forward pass; compute each task loss Lᵢ.</li>
-        <li>Form the total L_total = Σᵢ (Lᵢ/(2σᵢ²) + log σᵢ).</li>
+        <li>Form the total L_total = Σᵢ (Lᵢ/(2σᵢ²) + log σᵢ) — the regression form; classification drops the 1/2.</li>
         <li>Backpropagate L_total once. The gradient reaches both the network and the log σᵢ values, since they are learnable.</li>
         <li>Step the network and the log σᵢ together with the same optimizer.</li>
       </ol>
 
       <Code>
 {`# log_sigma = learnable vector, one entry per task, init 0
+# (regression form shown; classification uses w_i = 1 / sigma2, no 1/2)
 for i in range(K):
     sigma2 = exp(2 * log_sigma[i])   # sigma_i^2, always positive
     w_i = 1 / (2 * sigma2)           # the volume knob

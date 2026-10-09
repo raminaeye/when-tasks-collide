@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 
-// Schematic replay of the paper's Figure 5 toy: task 2 is 300x louder than task 1.
+// Schematic replay of the paper's Figure 2 toy: task 2 is 300x louder than task 1
+// (the paper uses a 100x output scale; exaggerated here so the gap is visible).
 const S = [1, 300];
 const STEPS = 600;
 const K = 0.02;
@@ -112,11 +113,15 @@ export default function GradNormSim() {
   return (
     <div>
       <p className="small dim" style={{ marginTop: 0 }}>
-        The paper's Figure 5, replayed live: one shared trunk, two tasks, task 2 starts 300× louder. Each panel
+        The paper's Figure 2 toy, replayed live as a schematic: one shared trunk, two tasks, task 2
+        starts 300× louder (the paper uses a 100× output scale; the gap is exaggerated here so it
+        shows). Each panel
         compares three runs — each task trained <em>alone</em> (gray, the best it could hope for), both with fixed
-        equal weights (red), and both with GradNorm (purple). <strong style={{ color: "var(--lighter)" }}>Try this:</strong> start with α at 0, then raise it to 1.5.
-        You should see the quiet task's loss (panel a) recover toward its solo curve, the weights (panel c) swing
-        toward the quiet task, and the loudness gap (panel d) snap shut. <strong style={{ color: "var(--lighter)" }}>Takeaway:</strong> the interference is
+        equal weights (red), and both with GradNorm (purple). <strong style={{ color: "var(--lighter)" }}>Try this:</strong> compare the red
+        and purple curves: the quiet task's loss (panel a) recovers toward its solo curve, the weights
+        (panel c) swing toward the quiet task, and the loudness gap (panel d) collapses from triple
+        digits to the teens. Then move α — it fine-tunes how hard the boost pushes for whoever is
+        behind (the paper's NYUv2 value is 1.5). <strong style={{ color: "var(--lighter)" }}>Takeaway:</strong> the interference is
         not zero-sum — equal weights hurt <em>both</em> tasks versus training alone, and panel (d) shows the whole
         mechanism: GradNorm is an equalizer for gradient loudness, and α sets how hard it pushes.
       </p>

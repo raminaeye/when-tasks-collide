@@ -22,8 +22,8 @@ export default function FieldGuide() {
         </li>
         <li>
           <strong>The cosine between each pair of task gradients.</strong> Often negative → direction
-          problem → PCGrad or CAGrad. (Remember: in the toy, once GD reached the ravine the two
-          gradients fought on about 85% of all steps, for the rest of the run.)
+          problem → PCGrad or CAGrad. (Remember: in the toy, once GD was trapped in the ravine the two
+          gradients kept fighting for the rest of the run — the conflict never resolves itself.)
         </li>
       </ol>
 
