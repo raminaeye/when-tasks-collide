@@ -68,10 +68,10 @@ export default function GradientPlayground() {
   const cos = dot(g1, g2) / Math.max(1e-9, norm(g1) * norm(g2));
 
   const { d, cuts } = useMemo(() => {
-    if (method === "gd") return { d: add(g1, g2), cuts: null as [V, V] | null };
+    if (method === "gd") return { d: scale(add(g1, g2), 0.5), cuts: null as [V, V] | null };
     if (method === "pcgrad") {
       const [a, b] = pcgrad(g1, g2);
-      return { d: add(a, b), cuts: [a, b] as [V, V] };
+      return { d: scale(add(a, b), 0.5), cuts: [a, b] as [V, V] };
     }
     if (method === "mgda") {
       const w = mgdaW(g1, g2);
